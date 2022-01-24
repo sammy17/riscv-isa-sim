@@ -310,6 +310,25 @@ bool cause_csr_t::unlogged_write(const reg_t val) noexcept {
   return basic_csr_t::unlogged_write(val & 15);
 }
 
+// implement class scause_csr_t
+scause_csr_t::scause_csr_t(processor_t* const proc, const reg_t addr):
+  basic_csr_t(proc, addr, 0) {
+}
+
+
+reg_t scause_csr_t::read() const noexcept {
+  reg_t val = basic_csr_t::read();
+  // When reading, the interrupt bit needs to adjust to xlen. Spike does
+  // not generally support dynamic xlen, but this code was (partly)
+  // there since at least 2015 (ea58df8 and c4350ef).
+  if (proc->get_max_xlen() > proc->get_xlen()) // Move interrupt bit to top of xlen
+    return val | ((val >> (proc->get_max_xlen()-1)) << (proc->get_xlen()-1));
+  return val;
+}
+bool scause_csr_t::unlogged_write(const reg_t val) noexcept {
+  return basic_csr_t::unlogged_write(val & 31);
+}
+
 // implement class base_status_csr_t
 base_status_csr_t::base_status_csr_t(processor_t* const proc, const reg_t addr):
   csr_t(proc, addr),
