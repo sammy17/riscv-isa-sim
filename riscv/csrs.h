@@ -179,6 +179,17 @@ class cause_csr_t: public basic_csr_t {
   reg_t val;
 };
 
+// For scause
+class scause_csr_t: public basic_csr_t {
+ public:
+  scause_csr_t(processor_t* const proc, const reg_t addr);
+
+  virtual reg_t read() const noexcept override;
+ protected:
+  virtual bool unlogged_write(const reg_t val) noexcept override;
+ private:
+  reg_t val;
+};
 
 // For *status family of CSRs
 class base_status_csr_t: public csr_t {
