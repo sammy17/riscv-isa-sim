@@ -460,7 +460,7 @@ void state_t::reset(processor_t* const proc, reg_t max_isa)
   auto nonvirtual_satp = std::make_shared<satp_csr_t>(proc, CSR_SATP);
   csrmap[CSR_VSATP] = vsatp = std::make_shared<base_atp_csr_t>(proc, CSR_VSATP);
   csrmap[CSR_SATP] = satp = std::make_shared<virtualized_satp_csr_t>(proc, nonvirtual_satp, vsatp);
-  auto nonvirtual_scause = std::make_shared<cause_csr_t>(proc, CSR_SCAUSE);
+  auto nonvirtual_scause = std::make_shared<scause_csr_t>(proc, CSR_SCAUSE);
   csrmap[CSR_VSCAUSE] = vscause = std::make_shared<cause_csr_t>(proc, CSR_VSCAUSE);
   csrmap[CSR_SCAUSE] = scause = std::make_shared<virtualized_csr_t>(proc, nonvirtual_scause, vscause);
   csrmap[CSR_MTVAL2] = mtval2 = std::make_shared<hypervisor_csr_t>(proc, CSR_MTVAL2);
@@ -891,7 +891,7 @@ void processor_t::take_trap(trap_t& t, reg_t epc)
     set_virt(false);
     reg_t vector = (state.stvec->read() & 1) && interrupt ? 4*bit : 0;
     state.pc = (state.stvec->read() & ~(reg_t)1) + vector;
-    state.scause->write(t.cause() & 15);
+    state.scause->write(t.cause() & 31);
     state.sepc->write(epc);
     state.stval->write(t.get_tval());
     state.htval->write(t.get_tval2());
