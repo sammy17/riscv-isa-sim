@@ -92,9 +92,7 @@ class htif_t : public chunked_memif_t
   unsigned int line_size;
   addr_t sig_addr; // torture
   addr_t sig_len; // torture
-
   std::vector<std::pair<addr_t, addr_t>> data_addrs;
-
   addr_t tohost_addr;
   addr_t fromhost_addr;
   int exitcode;

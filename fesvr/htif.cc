@@ -188,7 +188,6 @@ void htif_t::stop()
     std::ofstream sigs(sig_file);
     assert(sigs && "can't open signature file!");
     sigs << std::setfill('0') << std::hex;
-
     const addr_t incr = 16;
     for (addr_t i = 0; i < sig_len; i += line_size)
     {

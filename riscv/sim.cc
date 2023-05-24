@@ -209,7 +209,6 @@ void sim_t::step(size_t n)
     current_step += steps;
     if (current_step == INTERLEAVE)
     {
-      //std::cout << "LRSC Reservation gone\n" << std::flush;
       current_step = 0;
       procs[current_proc]->get_mmu()->yield_load_reservation();
       if (++current_proc == procs.size()) {
